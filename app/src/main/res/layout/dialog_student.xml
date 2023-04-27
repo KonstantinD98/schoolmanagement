@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/ETfirstNSEdit"
+        android:layout_width="376dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="8dp"
+        android:hint="First name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ETidS" />
+
+    <EditText
+        android:id="@+id/ETidS"
+        android:layout_width="376dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="148dp"
+        android:hint="ID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/ETlastNSEdit"
+        android:layout_width="376dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="4dp"
+        android:hint="Last name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ETfirstNSEdit" />
+
+    <EditText
+        android:id="@+id/ETgenderSEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.46"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ETlastNSEdit"
+        android:layout_width="376dp"
+        android:layout_height="44dp"
+        android:hint="Gender"
+        tools:layout_editor_absoluteX="19dp"
+        tools:layout_editor_absoluteY="270dp" />
+
+    <EditText
+        android:id="@+id/ETphoneS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.46"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ETgenderSEdit"
+        android:layout_width="376dp"
+        android:layout_height="44dp"
+        android:hint="Telephone"
+        tools:layout_editor_absoluteX="19dp"
+        tools:layout_editor_absoluteY="333dp" />
+
+    <EditText
+        android:id="@+id/ETemailSEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.46"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ETphoneS"
+        android:layout_width="376dp"
+        android:layout_height="44dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        tools:layout_editor_absoluteX="19dp"
+        tools:layout_editor_absoluteY="394dp" />
+
+    <EditText
+        android:id="@+id/ETgrade"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.46"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ETemailSEdit"
+        android:layout_width="376dp"
+        android:layout_height="44dp"
+        android:hint="Grade leve/Class"
+        tools:layout_editor_absoluteX="19dp"
+        tools:layout_editor_absoluteY="447dp" />
+
+    <EditText
+        android:id="@+id/ETclassTEdit"
+        android:layout_width="376dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="12dp"
+        android:hint="Class teacher"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ETgrade" />
+
+    <Button
+        android:id="@+id/btnDeleteS"
+        android:layout_width="145dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="216dp"
+        android:layout_marginTop="36dp"
+        android:text="Delete"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ETclassTEdit" />
+
+    <Button
+        android:id="@+id/btnSaveS"
+        android:layout_width="145sp"
+        android:layout_height="45dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="36dp"
+        android:text="Save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ETclassTEdit" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

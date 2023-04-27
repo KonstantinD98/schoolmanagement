@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.schoolmanagement.Activities.ClassesActivity;
+import com.example.schoolmanagement.Activities.ConsultationsActivity;
 import com.example.schoolmanagement.Activities.StudentsActivity;
 import com.example.schoolmanagement.Activities.TeacherActivity;
 
@@ -63,6 +64,16 @@ public class MainActivity extends AppCompatActivity {
                 editor.clear();
                 editor.apply();
                 startActivity(new Intent(MainActivity.this, ClassesActivity.class));
+            }
+        });
+        CardView consult = findViewById(R.id.consult);
+        consult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
+                startActivity(new Intent(MainActivity.this, ConsultationsActivity.class));
             }
         });
     }

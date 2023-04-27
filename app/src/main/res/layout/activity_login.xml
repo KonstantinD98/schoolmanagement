@@ -4,22 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/schoolback1"
     >
 
     <TextView
         android:id="@+id/TVSchool"
         style="@style/Theme.AppCompat.DayNight.Dialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="371dp"
+        android:layout_height="59dp"
         android:text="School Management"
+        android:textColor="@color/LightYellow"
         android:textSize="38sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13" />
+        app:layout_constraintVertical_bias="0.132" />
 
     <TextView
         android:id="@+id/TVLogin"
@@ -27,6 +28,7 @@
         android:layout_height="64dp"
         android:layout_marginBottom="468dp"
         android:text="Login"
+        android:textColor="@color/LightYellow"
         android:textAlignment="center"
         android:textSize="36sp"
         android:textStyle="bold"
@@ -38,37 +40,39 @@
 
     <EditText
         android:id="@+id/ETLoginUsername"
-        android:layout_width="331dp"
-        android:layout_height="64dp"
+        android:layout_width="315dp"
+        android:layout_height="57dp"
         android:drawablePadding="10dp"
         android:ems="10"
         android:hint="Name"
         android:inputType="textPersonName"
-        android:textColorHint="@color/black"
+        android:textColor="@color/LightYellow"
+        android:textColorHint="@color/LightYellow"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.55"
+        app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TVLogin"
-        app:layout_constraintVertical_bias="0.149"
+        app:layout_constraintVertical_bias="0.065"
         tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/ETLoginPassword"
-        android:layout_width="331dp"
-        android:layout_height="64dp"
+        android:layout_width="310dp"
+        android:layout_height="53dp"
         android:drawablePadding="15dp"
         android:ems="10"
         android:hint="Password"
+        android:textColor="@color/LightYellow"
         android:inputType="textPassword"
+        android:textColorHint="@color/LightYellow"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.55"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ETLoginUsername"
-        app:layout_constraintVertical_bias="0.069" />
+        app:layout_constraintVertical_bias="0.07" />
 
     <Button
         android:id="@+id/btnLogin"
@@ -95,6 +99,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin"
-        app:layout_constraintVertical_bias="0.138" />
+        app:layout_constraintVertical_bias="0.835" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

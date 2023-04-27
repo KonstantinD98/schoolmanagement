@@ -15,6 +15,18 @@
         android:theme="@style/Theme.Schoolmanagement"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.ConsultationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Classes.TwelveClassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Classes.ElevenClassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Classes.TenClassActivity"
+            android:exported="false" />
+        <activity
             android:name=".Classes.NineClassActivity"
             android:exported="false" />
         <activity

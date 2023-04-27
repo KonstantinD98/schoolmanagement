@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.ConsultationsActivity">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <TextView
+            android:text="Add Consultation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/editTextStudent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Student name" />
+
+        <EditText
+            android:id="@+id/editTextTeacher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Teacher name"/>
+
+        <EditText
+            android:id="@+id/editTextTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"/>
+
+        <EditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"/>
+
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date (yyyy-mm-dd)"/>
+
+        <Button
+            android:id="@+id/buttonAddConsult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Consultation"/>
+
+        <Button
+            android:id="@+id/buttonViewConsult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Consultation" />
+
+        <ListView
+            android:id="@+id/Lvconsult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

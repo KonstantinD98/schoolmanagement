@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+
+        <EditText
+            android:id="@+id/ETidCons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ID of consultation" />
+
+        <EditText
+            android:id="@+id/ETstuNameCon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Student name" />
+
+        <EditText
+            android:id="@+id/ETteachNameCon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Teacher name"/>
+
+        <EditText
+            android:id="@+id/ETtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"/>
+
+        <EditText
+            android:id="@+id/ETdescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"/>
+
+        <EditText
+            android:id="@+id/ETdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date (yyyy-mm-dd)"/>
+
+
+        <Button
+            android:id="@+id/buttonSaveConsult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Consultation"/>
+
+        <Button
+            android:id="@+id/buttonDeleteConsult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Consultation" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
