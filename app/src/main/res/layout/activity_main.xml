@@ -28,7 +28,7 @@
         android:id="@+id/titleHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="32dp"
         android:text="High School PGSS"
         android:textColor="@color/purple_200"
         android:textSize="30sp"

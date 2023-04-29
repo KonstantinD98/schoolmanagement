@@ -202,7 +202,7 @@ public class NineClassActivity extends AppCompatActivity {
                             con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
                                     ConnectionClass.ip.toString());
                             if (con != null) {
-                                q = "update StudentTable set first_nameS='" + f_StuName + "', last_nameS ='" + l_StuName + "', gender='" + stuGender + "', phone ='" +  stuPhone + "', email='" + stuEmail + "', class='" +  stuClass + "', first_nameT='" + stuClassT + "' where studentID=" + stu_id;
+                                q = "update StudentTable set first_nameS='" + f_StuName + "', last_nameS ='" + l_StuName + "', gender='" + stuGender + "', phone ='" +  stuPhone + "', email='" + stuEmail + "', class='" +  stuClass + "', last_nameT='" + stuClassT + "' where studentID=" + stu_id;
                                 st = con.createStatement();
                                 result = st.executeUpdate(q);
                                 if (result == 1) {
