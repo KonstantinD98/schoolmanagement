@@ -19,17 +19,15 @@
             android:textSize="24sp"
             android:textStyle="bold"/>
 
-        <EditText
-            android:id="@+id/editTextStudent"
+        <Spinner
+            android:id="@+id/spinnerS"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Student name" />
+            android:layout_height="38dp" />
 
-        <EditText
-            android:id="@+id/editTextTeacher"
+        <Spinner
+            android:id="@+id/spinnerT"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Teacher name"/>
+            android:layout_height="36dp" />
 
         <EditText
             android:id="@+id/editTextTitle"

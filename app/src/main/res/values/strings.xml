@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">schoolmanagement</string>
+    <array name="subjects">
+        <item>English</item>
+        <item>Math</item>
+        <item>Art</item>
+        <item>Science</item>
+        <item>History</item>
+        <item>Music</item>
+        <item>Geography</item>
+        <item>I.T (Information Technology)</item>
+        <item>Literature</item>
+    </array>
 </resources>

@@ -1,72 +1,194 @@
 package com.example.schoolmanagement.Classes;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.database.SQLException;
-import android.os.AsyncTask;
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.schoolmanagement.Activities.ClassesActivity;
+import com.example.schoolmanagement.Adapters.StudentAdapter;
 import com.example.schoolmanagement.ConnectionClass;
+import com.example.schoolmanagement.Data.GetStudentData;
+import com.example.schoolmanagement.Entity.Student;
 import com.example.schoolmanagement.R;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NineClassActivity extends AppCompatActivity {
-    private ListView studentListView;
-    private ArrayList<String> studentList = new ArrayList<>();
-
-    private ArrayAdapter<String> arrayAdapter;
+    Student student;
+    StudentAdapter studentAdapter;
+    GetStudentData getStudentData = new GetStudentData();
+    ListView studentLine;
     Connection con;
     Statement st ;
     int result = 0;
     ResultSet rs;
     String q = "";
 
+    Dialog dialog;
+
+    private void initDialog(Student student){
+
+
+        dialog = new Dialog(NineClassActivity.this);
+
+        dialog.setContentView(R.layout.dialog_student);
+
+        Button saveButton = dialog.findViewById(R.id.btnSaveS);
+        EditText ETfirstNSEdit = dialog.findViewById(R.id.ETfirstNSEdit);
+        EditText ETlastNSEdit = dialog.findViewById(R.id.ETlastNSEdit);
+        EditText ETgenderSEdit = dialog.findViewById(R.id.ETgenderSEdit);
+        EditText ETphoneS = dialog.findViewById(R.id.ETphoneS);
+        EditText ETemailSEdit = dialog.findViewById(R.id.ETemailSEdit);
+        EditText ETgrade = dialog.findViewById(R.id.ETgrade);
+        EditText ETidS = dialog.findViewById(R.id.ETidS);
+        Spinner ETclassTEdit = dialog.findViewById(R.id.spinnerEditS);
+        Button deleteButton = dialog.findViewById(R.id.btnDeleteS);
+        Button Exit = dialog.findViewById(R.id.btnExitEdit);
+        if (student != null) {
+            ETidS.setText(String.valueOf(student.getStudentID()));
+            ETfirstNSEdit.setText(student.getFirstName());
+            ETlastNSEdit.setText(student.getLastName());
+            ETgenderSEdit.setText(student.getGender());
+            ETphoneS.setText(student.getPhone());
+            ETemailSEdit.setText(student.getEmail());
+            ETgrade.setText(student.getGrade());
+            ETclassTEdit.setSelection(student.getTeacherID());
+    }
+
+        Exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int stu_id;
+                result = 0;
+                stu_id = Integer.parseInt(ETidS.getText().toString());
+                try {
+                    con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                            ConnectionClass.ip.toString());
+                    if (con != null) {
+                        q = "delete from StudentTable where studentID=" + stu_id;
+                        st = con.createStatement();
+                        result = st.executeUpdate(q);
+                        if (result == 1) {
+                            Toast.makeText(NineClassActivity.this, "Record Deleted", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(NineClassActivity.this, "Record NOT Deleted", Toast.LENGTH_LONG).show();
+                        }
+                        cleanStu();
+                        con.close();
+
+                    }
+
+
+                } catch (Exception e) {
+                    Log.e("Error : ", e.getMessage());
+                }
+
+            }
+
+            public void cleanStu() {
+                ETidS.setText("");
+                ETfirstNSEdit.setText("");
+                ETlastNSEdit.setText("");
+                ETgenderSEdit.setText("");
+                ETphoneS.setText("");
+                ETemailSEdit.setText("");
+                ETgrade.setText("");
+                ETclassTEdit.setSelection(0);
+            }
+        });
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int stu_id;
+                String f_StuName, l_StuName, stuGender, stuPhone, stuEmail, stuClass, stuClassT;
+                result = 0;
+                stu_id = Integer.parseInt(ETidS.getText().toString());
+                f_StuName = ETfirstNSEdit.getText().toString();
+                l_StuName = ETlastNSEdit.getText().toString();
+                stuGender = ETgenderSEdit.getText().toString();
+                stuPhone = ETphoneS.getText().toString();
+                stuEmail = ETemailSEdit.getText().toString();
+                stuClass = ETgrade.getText().toString();
+                stuClassT = String.valueOf(ETclassTEdit.getAdapter().getItemId(1));
+
+
+                try {
+                    con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                            ConnectionClass.ip.toString());
+                    if (con != null) {
+                        q = "update StudentTable set first_name='" + f_StuName + "', last_name ='" + l_StuName + "', gender='" + stuGender + "', phone ='" + stuPhone + "', email='" + stuEmail + "', class='" + stuClass + "', teacherID='" + stuClassT + "' where studentID=" + stu_id;
+                        st = con.createStatement();
+                        result = st.executeUpdate(q);
+                        if (result == 1) {
+                            Toast.makeText(NineClassActivity.this, "Record Updated", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(NineClassActivity.this, "Record NOT Updated", Toast.LENGTH_LONG).show();
+                        }
+                        cleanStu();
+                        con.close();
+                        st.close();
+
+                    }
+
+                } catch (Exception e) {
+                    Log.e("Error : ", e.getMessage());
+                    Toast.makeText(NineClassActivity.this, "An error occurred: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            public void cleanStu() {
+                ETidS.setText("");
+                ETfirstNSEdit.setText("");
+                ETlastNSEdit.setText("");
+                ETgenderSEdit.setText("");
+                ETphoneS.setText("");
+                ETemailSEdit.setText("");
+                ETgrade.setText("");
+                ETclassTEdit.setSelection(0);
+            }
+        });
+
+
+        fillSpinner(ETclassTEdit);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nine_class);
-        studentListView = findViewById(R.id.LVIX);
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, studentList);
-        studentListView.setAdapter(arrayAdapter);
+        studentLine = findViewById(R.id.LVIX);
+
+       // SetRecords();
 
         Button show = findViewById(R.id.btnShow);
-        //Button searchButton = findViewById(R.id.search_button);
-        //Button ExitButton = findViewById(R.id.exitView);
-        studentListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-
-
-        /*ExitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(NineClassActivity.this, ClassesActivity.class));
-            }
-        });*/
+        initDialog(student);
 
         show.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,16 +203,20 @@ public class NineClassActivity extends AppCompatActivity {
                             PreparedStatement stmt = con.prepareStatement(query);
                             ResultSet rs = stmt.executeQuery();
 
-                            // Retrieve the data from the query result
+                            List<Student> studentList = new ArrayList<>();
                             while (rs.next()) {
-                                String firstName = rs.getString("first_nameS");
-                                String lastName = rs.getString("last_nameS");
-                                String gender = rs.getString("gender");
-                                String phone = rs.getString("phone");
-                                String email = rs.getString("email");
-                                String grade = rs.getString("class");
-                                String student = "Firstname: " + firstName + "\nLastname: " + lastName + "\nGender: " + gender
-                                        + "\nTelephone: " + phone + "\nEmail: " + email + "\nClass: " + grade;
+                                Student student = new Student();
+
+                                student.setStudentID(rs.getInt("studentID"));
+                                student.setFirstName(rs.getString("first_name"));
+                                student.setLastName(rs.getString("last_name"));
+                                student.setGender(rs.getString("gender"));
+                                student.setPhone(rs.getString("phone"));
+                                student.setEmail(rs.getString("email"));
+                                student.setGrade(rs.getString("class"));
+                                student.setTeacherID(rs.getInt("teacherID"));
+
+
                                 studentList.add(student);
                             }
 
@@ -103,7 +229,8 @@ public class NineClassActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    arrayAdapter.notifyDataSetChanged();
+                                    studentAdapter = new StudentAdapter((Context) NineClassActivity.this, (ArrayList<Student>) studentList);
+                                    studentLine.setAdapter(studentAdapter);
                                 }
                             });
                         } catch (Exception e) {
@@ -114,152 +241,70 @@ public class NineClassActivity extends AppCompatActivity {
             }
         });
 
-        studentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        studentLine.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = (String) parent.getItemAtPosition(position);
-                Toast.makeText(NineClassActivity.this, "You clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
+                student = (Student) parent.getItemAtPosition(position);
+                Toast.makeText(NineClassActivity.this, "You clicked: " + student, Toast.LENGTH_SHORT).show();
 
                 LayoutInflater inflater = LayoutInflater.from(NineClassActivity.this);
                 View dialogView = inflater.inflate(R.layout.dialog_student, null);
 
                 // Set up the dialog builder
-                AlertDialog.Builder builder = new AlertDialog.Builder(NineClassActivity.this);
-                builder.setView(dialogView);
 
-                Button saveButton = dialogView.findViewById(R.id.btnSaveS);
-                EditText ETfirstNSEdit = dialogView.findViewById(R.id.ETfirstNSEdit);
-                EditText ETlastNSEdit = dialogView.findViewById(R.id.ETlastNSEdit);
-                EditText ETgenderSEdit = dialogView.findViewById(R.id.ETgenderSEdit);
-                EditText ETphoneS = dialogView.findViewById(R.id.ETphoneS);
-                EditText ETemailSEdit = dialogView.findViewById(R.id.ETemailSEdit);
-                EditText ETgrade = dialogView.findViewById(R.id.ETgrade);
-                EditText ETidS = dialogView.findViewById(R.id.ETidS);
-                EditText ETclassTEdit = dialogView.findViewById(R.id.ETclassTEdit);
-                Button deleteButton = dialogView.findViewById(R.id.btnDeleteS);
-                deleteButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int stu_id;
-                        result = 0;
-                        stu_id = Integer.parseInt(ETidS.getText().toString());
-                        try {
-                            con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
-                                    ConnectionClass.ip.toString());
-                            if (con != null) {
-                                q = "delete from StudentTable where studentID=" +stu_id;
-                                st = con.createStatement();
-                                result = st.executeUpdate(q);
-                                if (result == 1) {
-                                    Toast.makeText(NineClassActivity.this, "Record Deleted", Toast.LENGTH_LONG).show();
-                                }
-                                else {
-                                    Toast.makeText(NineClassActivity.this, "Record NOT Deleted", Toast.LENGTH_LONG).show();
-                                }
-                                cleanStu();
-                                con.close();
-                            }
-
-
-                        }
-
-                        catch (Exception e){
-                            Log.e("Error : ", e.getMessage());
-                        }
-
-                    }
-                    public void cleanStu() {
-                        ETidS.setText("");
-                        ETfirstNSEdit.setText("");
-                        ETlastNSEdit.setText("");
-                        ETgenderSEdit.setText("");
-                        ETphoneS.setText("");
-                        ETemailSEdit.setText("");
-                        ETgrade.setText("");
-                        ETclassTEdit.setText("");
-                    }
-                });
-
-
-
-                saveButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int stu_id;
-                        String f_StuName, l_StuName,stuGender,stuPhone, stuEmail,stuClass,stuClassT;
-                        result = 0;
-                        stu_id = Integer.parseInt(ETidS.getText().toString());
-                        f_StuName = ETfirstNSEdit.getText().toString();
-                        l_StuName = ETlastNSEdit.getText().toString();
-                        stuGender = ETgenderSEdit.getText().toString();
-                        stuPhone = ETphoneS.getText().toString();
-                        stuEmail = ETemailSEdit.getText().toString();
-                        stuClass = ETgrade.getText().toString();
-                        stuClassT = ETclassTEdit.getText().toString();
-
-
-                        try {
-                            con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
-                                    ConnectionClass.ip.toString());
-                            if (con != null) {
-                                q = "update StudentTable set first_nameS='" + f_StuName + "', last_nameS ='" + l_StuName + "', gender='" + stuGender + "', phone ='" +  stuPhone + "', email='" + stuEmail + "', class='" +  stuClass + "', last_nameT='" + stuClassT + "' where studentID=" + stu_id;
-                                st = con.createStatement();
-                                result = st.executeUpdate(q);
-                                if (result == 1) {
-                                    Toast.makeText(NineClassActivity.this, "Record Updated", Toast.LENGTH_LONG).show();
-                                } else {
-                                    Toast.makeText(NineClassActivity.this, "Record NOT Updated", Toast.LENGTH_LONG).show();
-                                }
-                                cleanStu();
-                                con.close();
-                                st.close();
-
-                            }
-
-                        } catch (Exception e) {
-                            Log.e("Error : ", e.getMessage());
-                            Toast.makeText(NineClassActivity.this, "An error occurred: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    public void cleanStu(){
-                        ETidS.setText("");
-                        ETfirstNSEdit.setText("");
-                        ETlastNSEdit.setText("");
-                        ETgenderSEdit.setText("");
-                        ETphoneS.setText("");
-                        ETemailSEdit.setText("");
-                        ETgrade.setText("");
-                        ETclassTEdit.setText("");
-                    }
-                });
-
-
-                // Show the dialog
-                AlertDialog dialog = builder.create();
+                initDialog(student);
                 dialog.show();
 
-            }
 
+
+            }
         });
 
     }
 
-        @SuppressLint("NewApi")
-        public Connection connectionClass (String user, String password, String database, String
-        server){
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            Connection connection = null;
-            String connectionURL = null;
-            try {
-                Class.forName("net.sourceforge.jtds.jdbc.Driver");
-                connectionURL = "jdbc:jtds:sqlserver://" + server + "/" + database + ";user=" + user + ";password=" + password + ";";
-                connection = DriverManager.getConnection(connectionURL);
-            } catch (Exception e) {
-                Log.e("SQL Connection Error : ", e.getMessage());
+    /*private void SetRecords() {
+        ArrayList<Student> data;
+        data = new ArrayList<Student>(getStudentData.GetAllStudents());
+        studentAdapter = new StudentAdapter(this,data);
+        studentLine.setAdapter(studentAdapter);
+    }*/
+
+
+    private void fillSpinner(Spinner spin) {
+        try {
+            con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                    ConnectionClass.ip.toString());
+            String query = "SELECT * FROM TeacherTable";
+            PreparedStatement stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            ArrayList<String> data = new ArrayList<String>();
+            while (rs.next()) {
+                String name = rs.getString("first_nameT");
+                data.add(name);
             }
-            return connection;
+            ArrayAdapter array = new ArrayAdapter(NineClassActivity.this, android.R.layout.simple_list_item_1, data);
+            spin.setAdapter(array);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
         }
     }
 
+    @SuppressLint("NewApi")
+    public Connection connectionClass (String user, String password, String database, String server){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Connection connection = null;
+        String connectionURL = null;
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            connectionURL = "jdbc:jtds:sqlserver://" + server + "/" + database + ";user=" + user + ";password=" + password + ";";
+            connection = DriverManager.getConnection(connectionURL);
+        } catch (Exception e) {
+            Log.e("SQL Connection Error : ", e.getMessage());
+        }
+        return connection;
+    }
+}
 

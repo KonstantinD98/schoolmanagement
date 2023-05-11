@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.schoolmanagement.ConnectionClass;
@@ -22,7 +23,8 @@ import java.sql.Statement;
 
 public class TeacherActivity extends AppCompatActivity {
 
-    EditText ETfirstNT, ETlastNT, ETgenderT, ETphoneT, ETemailT,ETspeciality;
+    EditText ETfirstNT, ETlastNT, ETgenderT, ETphoneT, ETemailT;
+    Spinner spinnerT;
     Button btnAddT, btnBackT;
     Connection con;
     Statement stmt;
@@ -39,7 +41,7 @@ public class TeacherActivity extends AppCompatActivity {
         ETgenderT = findViewById(R.id.ETgenderT);
         ETphoneT = findViewById(R.id.ETphoneT);
         ETemailT = findViewById(R.id.ETemailT);
-        ETspeciality = findViewById(R.id.ETspeciality);
+        spinnerT = findViewById(R.id.spinnerT);
         btnAddT = findViewById(R.id.btnAddT);
         btnBackT = findViewById(R.id.btnBackT);
         btnBackT.setOnClickListener(onClick);
@@ -52,7 +54,7 @@ public class TeacherActivity extends AppCompatActivity {
                 genderT = ETgenderT.getText().toString();
                 phoneT = ETphoneT.getText().toString();
                 emailT = ETemailT.getText().toString();
-                speciality = ETspeciality.getText().toString();
+                speciality = spinnerT.getSelectedItem().toString();
 
                 try {con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
                         ConnectionClass.ip.toString());
@@ -83,7 +85,7 @@ public class TeacherActivity extends AppCompatActivity {
         ETgenderT.setText("");
         ETphoneT.setText("");
         ETemailT.setText("");
-        ETspeciality.setText("");
+        spinnerT.setSelection(0);
     }
     private View.OnClickListener onClick = new View.OnClickListener() {
         @Override

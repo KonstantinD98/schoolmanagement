@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +24,16 @@ import com.example.schoolmanagement.R;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class StudentsActivity extends AppCompatActivity {
-    EditText ETfirstNS, ETlastNS, ETgenderS, ETphoneS, ETemailS, ETgrade, ETclassT;
+    EditText ETfirstNS, ETlastNS, ETgenderS, ETphoneS, ETemailS, ETgrade;
+    Spinner spinnerS;
     Button btnAddS, btnBackS;
     TextView statusS;
     Connection con;
@@ -45,27 +51,28 @@ public class StudentsActivity extends AppCompatActivity {
         ETphoneS = findViewById(R.id.ETphoneS);
         ETemailS = findViewById(R.id.ETemailS);
         ETgrade = findViewById(R.id.ETgrade);
-        ETclassT = findViewById(R.id.ETclassT);
+        spinnerS = findViewById(R.id.spinnerS);
         btnAddS = findViewById(R.id.btnAddS);
         btnBackS = findViewById(R.id.btnBackS);
         statusS = findViewById(R.id.statusS);
         btnBackS.setOnClickListener(onClick);
+        fillSpinner();
         btnAddS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String firstNameS,lastNameS,genderS,phoneS,emailS,grade,classT;
+                String firstNameS,lastNameS,genderS,phoneS,emailS,grade, classT;
                 firstNameS = ETfirstNS.getText().toString();
                 lastNameS = ETlastNS.getText().toString();
                 genderS = ETgenderS.getText().toString();
                 phoneS = ETphoneS.getText().toString();
                 emailS = ETemailS.getText().toString();
                 grade = ETgrade.getText().toString();
-                classT = ETclassT.getText().toString();
+                classT = String.valueOf(spinnerS.getAdapter().getItemId(1));
 
                 try {con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
                         ConnectionClass.ip.toString());
                     if (con != null ){
-                        q = "insert into StudentTable(first_nameS, last_nameS, gender, phone, email, class, last_nameT) values('"+firstNameS+"','"+lastNameS+"','"+genderS+"','"+phoneS+"','"
+                        q = "insert into StudentTable(first_name, last_name, gender, phone, email, class, teacherID) values('"+firstNameS+"','"+lastNameS+"','"+genderS+"','"+phoneS+"','"
                                 +emailS+"','"+grade+"',"+classT+")";
                         stmt = con.createStatement();
                         result = stmt.executeUpdate(q);
@@ -85,6 +92,27 @@ public class StudentsActivity extends AppCompatActivity {
         });
     }
 
+    private void fillSpinner() {
+        try {
+            con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
+                    ConnectionClass.ip.toString());
+            String query = "SELECT * FROM TeacherTable";
+            PreparedStatement stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            ArrayList<String> data = new ArrayList<String>();
+            while(rs.next()){
+                String name = rs.getString("first_nameT");
+                data.add(name);
+            }
+            ArrayAdapter array = new ArrayAdapter(this, android.R.layout.simple_list_item_1,data);
+            spinnerS.setAdapter(array);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
+    }
+
     public void clean(){
         ETfirstNS.setText("");
         ETlastNS.setText("");
@@ -92,7 +120,7 @@ public class StudentsActivity extends AppCompatActivity {
         ETphoneS.setText("");
         ETemailS.setText("");
         ETgrade.setText("");
-        ETclassT.setText("");
+        spinnerS.setSelection(0);
     }
        private View.OnClickListener onClick = new View.OnClickListener() {
             @Override

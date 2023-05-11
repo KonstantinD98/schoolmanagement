@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.schoolmanagement.ConnectionClass;
@@ -126,7 +127,7 @@ public class ElevenClassActivity extends AppCompatActivity {
                 EditText ETemailSEdit = dialogView.findViewById(R.id.ETemailSEdit);
                 EditText ETgrade = dialogView.findViewById(R.id.ETgrade);
                 EditText ETidS = dialogView.findViewById(R.id.ETidS);
-                EditText ETclassTEdit = dialogView.findViewById(R.id.ETclassTEdit);
+                Spinner ETclassTEdit = dialogView.findViewById(R.id.spinnerEditS);
                 Button deleteButton = dialogView.findViewById(R.id.btnDeleteS);
                 deleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -167,7 +168,7 @@ public class ElevenClassActivity extends AppCompatActivity {
                         ETphoneS.setText("");
                         ETemailSEdit.setText("");
                         ETgrade.setText("");
-                        ETclassTEdit.setText("");
+                        ETclassTEdit.setSelection(0);
                     }
                 });
 
@@ -186,7 +187,7 @@ public class ElevenClassActivity extends AppCompatActivity {
                         stuPhone = ETphoneS.getText().toString();
                         stuEmail = ETemailSEdit.getText().toString();
                         stuClass = ETgrade.getText().toString();
-                        stuClassT = ETclassTEdit.getText().toString();
+                        stuClassT = String.valueOf(ETclassTEdit.getAdapter().getItemId(1));
 
 
                         try {
@@ -220,7 +221,7 @@ public class ElevenClassActivity extends AppCompatActivity {
                         ETphoneS.setText("");
                         ETemailSEdit.setText("");
                         ETgrade.setText("");
-                        ETclassTEdit.setText("");
+                        ETclassTEdit.setSelection(0);
                     }
                 });
 

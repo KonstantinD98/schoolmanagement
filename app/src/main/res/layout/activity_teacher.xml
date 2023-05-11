@@ -91,16 +91,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ETphoneT"/>
 
-    <EditText
-        android:id="@+id/ETspeciality"
+    <Spinner
+        android:id="@+id/spinnerT"
         android:layout_width="376dp"
         android:layout_height="44dp"
         android:layout_marginTop="16dp"
-        android:hint="Speciality"
+        android:entries="@array/subjects"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.46"
+        app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ETemailT"/>
+        app:layout_constraintTop_toBottomOf="@+id/ETemailT" />
 
     <Button
         android:id="@+id/btnBackT"
@@ -110,17 +110,17 @@
         android:layout_marginTop="48dp"
         android:text="Back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ETspeciality" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerT" />
 
     <Button
         android:id="@+id/btnAddT"
         android:layout_width="145dp"
         android:layout_height="45dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="28dp"
         android:layout_marginTop="48dp"
         android:text="Add"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ETspeciality" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerT" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

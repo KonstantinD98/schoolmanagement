@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.schoolmanagement.Classes.NineClassActivity;
@@ -29,7 +30,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class ConsultationsActivity extends AppCompatActivity {
-     EditText editTextStudent, editTextTeacher, editTextTitle, editTextDescription, editTextDate;
+     EditText editTextTitle, editTextDescription, editTextDate;
+     Spinner spinnerT, spinnerS;
      Button buttonAddConsult, buttonViewConsult;
      Connection con;
     private ListView consultListView;
@@ -57,13 +59,15 @@ public class ConsultationsActivity extends AppCompatActivity {
          consultListView.setAdapter(arrayAdapter);
          buttonViewConsult = findViewById(R.id.buttonViewConsult);
          consultListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-         editTextStudent = findViewById(R.id.editTextStudent);
-         editTextTeacher = findViewById(R.id.editTextTeacher);
+         spinnerS = findViewById(R.id.spinnerS);
+         spinnerT = findViewById(R.id.spinnerT);
          editTextTitle = findViewById(R.id.editTextTitle);
          editTextDescription = findViewById(R.id.editTextDescription);
          editTextDate = findViewById(R.id.editTextDate);
          buttonAddConsult = findViewById(R.id.buttonAddConsult);
          buttonViewConsult = findViewById(R.id.buttonViewConsult);
+         fillSpinnerS();
+         fillSpinnerT();
          buttonViewConsult.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
@@ -79,8 +83,8 @@ public class ConsultationsActivity extends AppCompatActivity {
 
                              // Retrieve the data from the query result
                              while (rs.next()) {
-                                 String firstNameStudent = rs.getString("first_nameS");
-                                 String firstNameTeacher = rs.getString("last_nameT");
+                                 String firstNameStudent = rs.getString("studentID");
+                                 String firstNameTeacher = rs.getString("teacherID");
                                  String subject = rs.getString("subject");
                                  String description = rs.getString("description");
                                  String consultation_date = rs.getString("consultation_date");
@@ -228,47 +232,86 @@ public class ConsultationsActivity extends AppCompatActivity {
         buttonAddConsult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String studentName = editTextStudent.getText().toString().trim();
-                String teacherName = editTextTeacher.getText().toString().trim();
+                Long studentName = spinnerS.getAdapter().getItemId(1);
+                Long teacherName = spinnerT.getAdapter().getItemId(1);
                 String consultationTitle = editTextTitle.getText().toString().trim();
                 String consultationDetails = editTextDescription.getText().toString().trim();
                 String consultationDate = editTextDate.getText().toString().trim();
 
-                if (!TextUtils.isEmpty(studentName) && !TextUtils.isEmpty(teacherName)
-                        && !TextUtils.isEmpty(consultationDate) && !TextUtils.isEmpty(consultationTitle)
-                        && !TextUtils.isEmpty(consultationDetails)) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
-                                        ConnectionClass.ip.toString());
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                                    ConnectionClass.ip.toString());
 
-                                String query = "INSERT INTO ConsultationTable (first_nameS, last_nameT, subject, description, consultation_date) " +
-                                        "VALUES ('" + studentName + "', '" + teacherName + "', '" + consultationTitle + "', '" + consultationDetails + "', '" + consultationDate + "')";
-                                PreparedStatement stmt = con.prepareStatement(query);
-                                stmt.executeUpdate();
+                            String query = "INSERT INTO ConsultationTable (studentID, teacherID, subject, description, consultation_date) " +
+                                    "VALUES ('" + studentName + "', '" + teacherName + "', '" + consultationTitle + "', '" + consultationDetails + "', '" + consultationDate + "')";
+                            PreparedStatement stmt = con.prepareStatement(query);
+                            stmt.executeUpdate();
 
-                                stmt.close();
-                                con.close();
+                            stmt.close();
+                            con.close();
 
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getApplicationContext(), "Consultation added successfully", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Consultation added successfully", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    }).start();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                }
+                    }
+                }).start();
             }
         });
+        }
+
+    private void fillSpinnerT() {
+        try {
+            con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
+                    ConnectionClass.ip.toString());
+            String query = "SELECT * FROM TeacherTable";
+            PreparedStatement stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            ArrayList<String> data = new ArrayList<String>();
+            while(rs.next()){
+                String name = rs.getString("first_nameT");
+                data.add(name);
+            }
+            ArrayAdapter array = new ArrayAdapter(this, android.R.layout.simple_list_item_1,data);
+            spinnerT.setAdapter(array);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
     }
+
+
+    private void fillSpinnerS() {
+        try {
+            con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
+                    ConnectionClass.ip.toString());
+            String query = "SELECT * FROM StudentTable";
+            PreparedStatement stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            ArrayList<String> data = new ArrayList<String>();
+            while(rs.next()){
+                String name = rs.getString("first_name");
+                data.add(name);
+            }
+            ArrayAdapter array = new ArrayAdapter(this, android.R.layout.simple_list_item_1,data);
+            spinnerS.setAdapter(array);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
+    }
+
+
     @SuppressLint("NewApi")
     public Connection connectionClass(String user, String password, String database, String server) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
