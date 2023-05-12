@@ -57,6 +57,13 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnShow" />
+    <ImageView
+        android:id="@+id/imgExit"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/exit" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

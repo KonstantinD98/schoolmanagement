@@ -115,24 +115,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerEditS" />
 
-    <Button
-        android:id="@+id/btnFillS"
-        android:layout_width="145sp"
-        android:layout_height="45dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="fill data"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSaveS" />
-
-    <Button
-        android:id="@+id/btnExitEdit"
-        android:layout_width="145sp"
-        android:layout_height="45dp"
-        android:layout_marginStart="208dp"
-        android:layout_marginTop="20dp"
-        android:text="Done"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnDeleteS" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

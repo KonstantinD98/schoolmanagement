@@ -5,7 +5,8 @@ import android.os.StrictMode;
 import android.util.Log;
 
 import com.example.schoolmanagement.ConnectionClass;
-import com.example.schoolmanagement.Entity.Teacher;
+import com.example.schoolmanagement.Entity.Consultation;
+import com.example.schoolmanagement.Entity.Student;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,31 +16,29 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetTeacherData {
+public class GetConsultationData {
     Connection con;
 
-    public List<Teacher> GetAllTeachers() {
-        List<Teacher> teacherList = new ArrayList<>();
+    public List<Consultation> GetAllConsultations() {
+        List<Consultation> consultationList = new ArrayList<>();
 
         try {
             con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
                     ConnectionClass.ip.toString());
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("Select * from TeacherTable");
+            ResultSet rs = stmt.executeQuery("Select * from ConsultationTable");
             rs.next();
             while (rs.next()) {
-                Teacher teacher = new Teacher();
+                Consultation consultation = new Consultation();
 
-                teacher.setTeacherID(rs.getInt("teacherID"));
-                teacher.setTeacherFirstName(rs.getString("first_nameT"));
-                teacher.setTeacherLastName(rs.getString("last_nameT"));
-                teacher.setTeacherGender(rs.getString("gender"));
-                teacher.setTeacherPhone(rs.getString("phone"));
-                teacher.setTeacherEmail(rs.getString("email"));
-                teacher.setTeacherSpeciality(rs.getString("speciality"));
+                consultation.setStudentIdCon(rs.getInt("studentID"));
+                consultation.setTeacherIdCon(rs.getInt("teacherID"));
+                consultation.setSubject(rs.getString("subject"));
+                consultation.setDescription(rs.getString("description"));
+                consultation.setConsultationDate(rs.getDate("date"));
 
 
-               teacherList.add(teacher);
+                consultationList.add(consultation);
             }
 
             rs.close();
@@ -49,7 +48,7 @@ public class GetTeacherData {
             e.printStackTrace();
         }
 
-        return teacherList;
+        return consultationList;
     }
 
 

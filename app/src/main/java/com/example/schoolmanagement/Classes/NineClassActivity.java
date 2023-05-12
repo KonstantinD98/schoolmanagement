@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -61,7 +62,7 @@ public class NineClassActivity extends AppCompatActivity {
         EditText ETidS = dialog.findViewById(R.id.ETidS);
         Spinner ETclassTEdit = dialog.findViewById(R.id.spinnerEditS);
         Button deleteButton = dialog.findViewById(R.id.btnDeleteS);
-        Button Exit = dialog.findViewById(R.id.btnExitEdit);
+
         if (student != null) {
             ETidS.setText(String.valueOf(student.getStudentID()));
             ETfirstNSEdit.setText(student.getFirstName());
@@ -72,13 +73,6 @@ public class NineClassActivity extends AppCompatActivity {
             ETgrade.setText(student.getGrade());
             ETclassTEdit.setSelection(student.getTeacherID());
     }
-
-        Exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,12 +177,19 @@ public class NineClassActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nine_class);
         studentLine = findViewById(R.id.LVIX);
+        ImageView imgExit = findViewById(R.id.imgExit);
 
        // SetRecords();
 
         Button show = findViewById(R.id.btnShow);
 
         initDialog(student);
+        imgExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         show.setOnClickListener(new View.OnClickListener() {
             @Override

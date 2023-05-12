@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.TextUtils;
@@ -18,8 +19,15 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.schoolmanagement.Adapters.ConsultationAdapter;
+import com.example.schoolmanagement.Adapters.StudentAdapter;
 import com.example.schoolmanagement.Classes.NineClassActivity;
+import com.example.schoolmanagement.Classes.TenClassActivity;
 import com.example.schoolmanagement.ConnectionClass;
+import com.example.schoolmanagement.Data.GetConsultationData;
+import com.example.schoolmanagement.Data.GetStudentData;
+import com.example.schoolmanagement.Entity.Consultation;
+import com.example.schoolmanagement.Entity.Student;
 import com.example.schoolmanagement.R;
 
 import java.sql.Connection;
@@ -28,17 +36,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConsultationsActivity extends AppCompatActivity {
      EditText editTextTitle, editTextDescription, editTextDate;
      Spinner spinnerT, spinnerS;
      Button buttonAddConsult, buttonViewConsult;
      Connection con;
-    private ListView consultListView;
+     Consultation consultation;
+     ConsultationAdapter consultationAdapter;
+     GetConsultationData getConsultationData = new GetConsultationData();
+     ListView consultationLine;
 
-    private ArrayList<String> consultList = new ArrayList<>();
-
-    private ArrayAdapter<String> arrayAdapter;
 
     Statement st ;
 
@@ -54,11 +63,9 @@ public class ConsultationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
          super.onCreate(savedInstanceState);
          setContentView(R.layout.activity_consultations);
-         consultListView = findViewById(R.id.Lvconsult);
-         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, consultList);
-         consultListView.setAdapter(arrayAdapter);
+
          buttonViewConsult = findViewById(R.id.buttonViewConsult);
-         consultListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+         consultationLine = findViewById(R.id.Lvconsult);
          spinnerS = findViewById(R.id.spinnerS);
          spinnerT = findViewById(R.id.spinnerT);
          editTextTitle = findViewById(R.id.editTextTitle);
@@ -80,17 +87,18 @@ public class ConsultationsActivity extends AppCompatActivity {
                              String query = "SELECT * FROM ConsultationTable";
                              PreparedStatement stmt = con.prepareStatement(query);
                              ResultSet rs = stmt.executeQuery();
-
+                             List<Consultation> consultationList = new ArrayList<>();
                              // Retrieve the data from the query result
                              while (rs.next()) {
-                                 String firstNameStudent = rs.getString("studentID");
-                                 String firstNameTeacher = rs.getString("teacherID");
-                                 String subject = rs.getString("subject");
-                                 String description = rs.getString("description");
-                                 String consultation_date = rs.getString("consultation_date");
-                                 String consultation = "FirstNameStudent: " + firstNameStudent + "\nLastNameTeacher : " + firstNameTeacher + "\nAbout subject: " + subject
-                                         + "\nDescription: " + description + "\nOn Date: " + consultation_date;
-                                 consultList.add(consultation);
+                                 Consultation consultation = new Consultation();
+                                 consultation.setCosnultationID(rs.getInt("consultationID"));
+                                 consultation.setStudentIdCon(rs.getInt("studentID"));
+                                 consultation.setTeacherIdCon(rs.getInt("teacherID"));
+                                 consultation.setSubject(rs.getString("subject"));
+                                 consultation.setDescription(rs.getString("description"));
+                                 consultation.setConsultationDate(rs.getDate("consultation_date"));
+
+                                 consultationList.add(consultation);
                              }
 
                              // Close the connection and the query result
@@ -102,7 +110,8 @@ public class ConsultationsActivity extends AppCompatActivity {
                              runOnUiThread(new Runnable() {
                                  @Override
                                  public void run() {
-                                     arrayAdapter.notifyDataSetChanged();
+                                     consultationAdapter = new ConsultationAdapter((Context) ConsultationsActivity.this, (ArrayList<Consultation>) consultationList);
+                                     consultationLine.setAdapter(consultationAdapter);
                                  }
                              });
                          } catch (Exception e) {
@@ -112,11 +121,11 @@ public class ConsultationsActivity extends AppCompatActivity {
                  }).start();
              }
          });
-         consultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+         consultationLine.setOnItemClickListener(new AdapterView.OnItemClickListener() {
              @Override
              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 String selectedItem = (String) parent.getItemAtPosition(position);
-                 Toast.makeText(ConsultationsActivity.this, "You clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
+                 Consultation consultation = (Consultation) parent.getItemAtPosition(position);
+                 Toast.makeText(ConsultationsActivity.this, "You clicked: " + consultation, Toast.LENGTH_SHORT).show();
 
                  LayoutInflater inflater = LayoutInflater.from(ConsultationsActivity.this);
                  View dialogView = inflater.inflate(R.layout.dialog_consult, null);
@@ -131,6 +140,13 @@ public class ConsultationsActivity extends AppCompatActivity {
                  EditText ETdescription = dialogView.findViewById(R.id.ETdescription);
                  EditText ETdate = dialogView.findViewById(R.id.ETdate);
                  Button buttonSaveConsult = dialogView.findViewById(R.id.buttonSaveConsult);
+
+                 ETidConsultation.setText(String.valueOf(consultation.getCosnultationID()));
+                 ETstuNameCon.setText(String.valueOf(consultation.getStudentIdCon()));
+                 ETteachNameCon.setText(String.valueOf(consultation.getTeacherIdCon()));
+                 ETtitle.setText(consultation.getSubject());
+                 ETdescription.setText(consultation.getDescription());
+                 ETdate.setText(consultation.getConsultationDate().toString());
                  buttonSaveConsult.setOnClickListener(new View.OnClickListener() {
                      @Override
                      public void onClick(View v) {
@@ -150,7 +166,7 @@ public class ConsultationsActivity extends AppCompatActivity {
                              con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
                                      ConnectionClass.ip.toString());
                              if (con != null) {
-                                 q = "update ConsultationTable set first_nameS='" + firstNameS + "', last_nameT ='" +  lastNameT + "', subject='" + subject + "', description ='" +description + "', consultation_date='" + consultation_date + "' where consultationID=" + cons_id;
+                                 q = "update ConsultationTable set studentID='" + firstNameS + "', teacherID ='" +  lastNameT + "', subject='" + subject + "', description ='" +description + "', consultation_date='" + consultation_date + "' where consultationID=" + cons_id;
                                  st = con.createStatement();
                                  result = st.executeUpdate(q);
                                  if (result == 1) {
