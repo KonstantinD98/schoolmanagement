@@ -75,7 +75,7 @@ public class TwelveClassActivity extends AppCompatActivity {
             ETphoneS.setText(student.getPhone());
             ETemailSEdit.setText(student.getEmail());
             ETgrade.setText(student.getGrade());
-            ETclassTEdit.setSelection(student.getTeacherID());
+            fillSpinner(ETclassTEdit, student.getTeacherID());
         }
 
 
@@ -134,7 +134,8 @@ public class TwelveClassActivity extends AppCompatActivity {
                 stuPhone = ETphoneS.getText().toString();
                 stuEmail = ETemailSEdit.getText().toString();
                 stuClass = ETgrade.getText().toString();
-                stuClassT = String.valueOf(ETclassTEdit.getAdapter().getItemId(1));
+                String[] parts = ETclassTEdit.getSelectedItem().toString().split(" - ");
+                stuClassT = parts[1];
 
 
                 try {
@@ -173,9 +174,6 @@ public class TwelveClassActivity extends AppCompatActivity {
                 ETclassTEdit.setSelection(0);
             }
         });
-
-
-        fillSpinner(ETclassTEdit);
     }
 
     @Override
@@ -184,8 +182,6 @@ public class TwelveClassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_twelve_class);
         studentLine = findViewById(R.id.LVXII);
         ImageView imgExit = findViewById(R.id.imgExit);
-
-        // SetRecords();
 
         Button show = findViewById(R.id.btnShowXII);
 
@@ -267,16 +263,7 @@ public class TwelveClassActivity extends AppCompatActivity {
         });
 
     }
-
-    /*private void SetRecords() {
-        ArrayList<Student> data;
-        data = new ArrayList<Student>(getStudentData.GetAllStudents());
-        studentAdapter = new StudentAdapter(this,data);
-        studentLine.setAdapter(studentAdapter);
-    }*/
-
-
-    private void fillSpinner(Spinner spin) {
+    private void fillSpinner(Spinner spin, int id) {
         try {
             con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
                     ConnectionClass.ip.toString());
@@ -285,12 +272,25 @@ public class TwelveClassActivity extends AppCompatActivity {
             ResultSet rs = stmt.executeQuery();
 
             ArrayList<String> data = new ArrayList<String>();
+
+            String selectionRow = "";
+
             while (rs.next()) {
-                String name = rs.getString("first_nameT");
-                data.add(name);
+                int teacherID = rs.getInt("TeacherID");
+                String firstName = rs.getString("first_nameT");
+                String entry = firstName + " - " + teacherID;
+                data.add(entry);
+
+                if(teacherID == id){
+                    selectionRow = entry;
+                }
             }
             ArrayAdapter array = new ArrayAdapter(TwelveClassActivity.this, android.R.layout.simple_list_item_1, data);
             spin.setAdapter(array);
+
+            int spinnerPos = array.getPosition(selectionRow);
+            spin.setSelection(spinnerPos);
+
         } catch (Exception ex) {
             ex.printStackTrace();
 

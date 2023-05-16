@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public class TeacherAdapter extends ArrayAdapter<Teacher> {
     }
     public class Holder {
         TextView TvfNameT, TVlNameT, TVgenderT,TVphoneT,TVemailT, TVspeciality;
+        ImageView imageView;
     }
 
     @NonNull
@@ -51,6 +53,7 @@ public class TeacherAdapter extends ArrayAdapter<Teacher> {
             viewHolder.TVphoneT= convertView.findViewById(R.id.TVphoneT);
             viewHolder.TVemailT = convertView.findViewById(R.id.TVemailT);
             viewHolder.TVspeciality = convertView.findViewById(R.id.TVspeciality);
+            viewHolder.imageView = convertView.findViewById(R.id.imageView);
             convertView.setTag(viewHolder);
 
         }else {
@@ -61,7 +64,8 @@ public class TeacherAdapter extends ArrayAdapter<Teacher> {
         viewHolder.TVgenderT.setText(teacher.getTeacherGender());
         viewHolder.TVphoneT.setText(teacher.getTeacherPhone());
         viewHolder.TVemailT.setText(teacher.getTeacherEmail());
-        viewHolder.TVspeciality.setText(teacher.getTeacherEmail());
+        viewHolder.TVspeciality.setText(teacher.getTeacherSpeciality());
+        viewHolder.imageView.setImageResource(R.drawable.teacher_profile);
 
         return convertView;
 

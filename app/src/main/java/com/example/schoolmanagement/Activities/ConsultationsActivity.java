@@ -248,8 +248,12 @@ public class ConsultationsActivity extends AppCompatActivity {
         buttonAddConsult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Long studentName = spinnerS.getAdapter().getItemId(1);
-                Long teacherName = spinnerT.getAdapter().getItemId(1);
+                String selectedStudentName = spinnerS.getSelectedItem().toString();
+                int studentID = getStudentIDFromName(selectedStudentName);
+
+                String selectedTeacherName = spinnerT.getSelectedItem().toString();
+                int teacherID = getTeacherIDFromName(selectedTeacherName);
+
                 String consultationTitle = editTextTitle.getText().toString().trim();
                 String consultationDetails = editTextDescription.getText().toString().trim();
                 String consultationDate = editTextDate.getText().toString().trim();
@@ -262,7 +266,7 @@ public class ConsultationsActivity extends AppCompatActivity {
                                     ConnectionClass.ip.toString());
 
                             String query = "INSERT INTO ConsultationTable (studentID, teacherID, subject, description, consultation_date) " +
-                                    "VALUES ('" + studentName + "', '" + teacherName + "', '" + consultationTitle + "', '" + consultationDetails + "', '" + consultationDate + "')";
+                                    "VALUES ('" + studentID  + "', '" + teacherID + "', '" + consultationTitle + "', '" + consultationDetails + "', '" + consultationDate + "')";
                             PreparedStatement stmt = con.prepareStatement(query);
                             stmt.executeUpdate();
 
@@ -325,8 +329,44 @@ public class ConsultationsActivity extends AppCompatActivity {
             ex.printStackTrace();
 
         }
-    }
 
+    }
+    private int getStudentIDFromName(String studentName) {
+        try {
+            con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
+                    ConnectionClass.ip.toString());
+            String query = "SELECT studentID FROM StudentTable WHERE first_name = ?";
+            PreparedStatement stmt = con.prepareStatement(query);
+            stmt.setString(1, studentName);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("studentID");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return -1;
+    }
+    private int getTeacherIDFromName(String teacherName) {
+        try {
+            con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
+                ConnectionClass.ip.toString());
+            String query = "SELECT teacherID FROM TeacherTable WHERE first_nameT = ?";
+            PreparedStatement stmt = con.prepareStatement(query);
+            stmt.setString(1, teacherName);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("teacherID");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return -1;
+    }
 
     @SuppressLint("NewApi")
     public Connection connectionClass(String user, String password, String database, String server) {

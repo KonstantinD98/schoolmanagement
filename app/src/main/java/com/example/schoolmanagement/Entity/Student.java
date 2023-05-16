@@ -9,6 +9,7 @@ public class Student {
     private String email;
     private String grade;
     private int teacherID;
+    int img;
 
     public Student(int studentID, String firstName, String lastName, String gender, String phone, String email, String grade, int teacherID) {
         StudentID = studentID;
@@ -19,6 +20,7 @@ public class Student {
         this.email = email;
         this.grade = grade;
         this.teacherID = teacherID;
+
     }
 
     public Student() {
@@ -87,5 +89,13 @@ public class Student {
 
     public void setGrade(String grade) {
         this.grade = grade;
+    }
+
+    public int getImg() {
+        return img;
+    }
+
+    public void setImg(int img) {
+        this.img = img;
     }
 }

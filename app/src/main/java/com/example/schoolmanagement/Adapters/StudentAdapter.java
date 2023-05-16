@@ -1,20 +1,13 @@
 package com.example.schoolmanagement.Adapters;
-
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.Person;
 import java.util.ArrayList;
-import com.example.schoolmanagement.ConnectionClass;
 import com.example.schoolmanagement.Entity.Student;
 import com.example.schoolmanagement.R;
 
@@ -36,6 +29,7 @@ public class StudentAdapter extends ArrayAdapter<Student> {
         }
         public class Holder {
         TextView TvfName, TVlName, TVgender,TVphone,TVemail, TVclass;
+        ImageView imageView;
         }
 
     @NonNull
@@ -56,6 +50,7 @@ public class StudentAdapter extends ArrayAdapter<Student> {
             viewHolder.TVphone= convertView.findViewById(R.id.TVphone);
             viewHolder.TVemail = convertView.findViewById(R.id.TVemail);
             viewHolder.TVclass = convertView.findViewById(R.id.TVclass);
+            viewHolder.imageView = convertView.findViewById(R.id.imageView);
             convertView.setTag(viewHolder);
 
             }else {
@@ -67,6 +62,9 @@ public class StudentAdapter extends ArrayAdapter<Student> {
         viewHolder.TVphone.setText(student.getPhone());
         viewHolder.TVemail.setText(student.getEmail());
         viewHolder.TVclass.setText(student.getGrade());
+        viewHolder.imageView.setImageResource(R.drawable.student);
+
+
 
         return convertView;
 

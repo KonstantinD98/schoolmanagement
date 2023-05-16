@@ -7,7 +7,7 @@ public class Teacher {
     String teacherGender;
     String teacherPhone;
     String teacherEmail;
-    String teacherSpeciality;
+    private String teacherSpeciality;
 
     public Teacher(int teacherID, String teacherFirstName, String teacherLastName, String teacherGender, String teacherPhone, String teacherEmail, String teacherSpeciality) {
         this.teacherID = teacherID;

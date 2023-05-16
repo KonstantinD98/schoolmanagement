@@ -30,6 +30,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class StudentsActivity extends AppCompatActivity {
     EditText ETfirstNS, ETlastNS, ETgenderS, ETphoneS, ETemailS, ETgrade;
@@ -67,13 +68,14 @@ public class StudentsActivity extends AppCompatActivity {
                 phoneS = ETphoneS.getText().toString();
                 emailS = ETemailS.getText().toString();
                 grade = ETgrade.getText().toString();
-                classT = String.valueOf(spinnerS.getAdapter().getItemId(1));
+                String selectedTeacherName = spinnerS.getSelectedItem().toString();
+                int teacherID = teacherMap.get(selectedTeacherName);
 
                 try {con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
                         ConnectionClass.ip.toString());
                     if (con != null ){
                         q = "insert into StudentTable(first_name, last_name, gender, phone, email, class, teacherID) values('"+firstNameS+"','"+lastNameS+"','"+genderS+"','"+phoneS+"','"
-                                +emailS+"','"+grade+"',"+classT+")";
+                                +emailS+"','"+grade+"','"+teacherID+"')";
                         stmt = con.createStatement();
                         result = stmt.executeUpdate(q);
                         if (result == 1){
@@ -91,6 +93,7 @@ public class StudentsActivity extends AppCompatActivity {
             }
         });
     }
+    private HashMap<String, Integer> teacherMap;
 
     private void fillSpinner() {
         try {
@@ -100,13 +103,18 @@ public class StudentsActivity extends AppCompatActivity {
             PreparedStatement stmt = con.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
 
-            ArrayList<String> data = new ArrayList<String>();
+            ArrayList<String> teacherNames = new ArrayList<String>();
+            teacherMap = new HashMap<>();
             while(rs.next()){
+                int teacherID = rs.getInt("teacherID");
                 String name = rs.getString("first_nameT");
-                data.add(name);
+                teacherNames.add(name);
+                teacherMap.put(name,teacherID);
             }
-            ArrayAdapter array = new ArrayAdapter(this, android.R.layout.simple_list_item_1,data);
+            ArrayAdapter array = new ArrayAdapter(this, android.R.layout.simple_list_item_1,teacherNames);
             spinnerS.setAdapter(array);
+
+
         } catch (Exception ex) {
             ex.printStackTrace();
 

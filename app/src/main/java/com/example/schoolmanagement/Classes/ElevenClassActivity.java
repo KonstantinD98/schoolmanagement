@@ -24,15 +24,19 @@ import com.example.schoolmanagement.Adapters.StudentAdapter;
 import com.example.schoolmanagement.ConnectionClass;
 import com.example.schoolmanagement.Data.GetStudentData;
 import com.example.schoolmanagement.Entity.Student;
+import com.example.schoolmanagement.Entity.Teacher;
 import com.example.schoolmanagement.R;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ElevenClassActivity extends AppCompatActivity {
 
@@ -46,6 +50,7 @@ public class ElevenClassActivity extends AppCompatActivity {
     ResultSet rs;
     String q = "";
     Dialog dialog;
+
 
     private void initDialog(Student student){
 
@@ -64,7 +69,8 @@ public class ElevenClassActivity extends AppCompatActivity {
         EditText ETidS = dialog.findViewById(R.id.ETidS);
         Spinner ETclassTEdit = dialog.findViewById(R.id.spinnerEditS);
         Button deleteButton = dialog.findViewById(R.id.btnDeleteS);
-        //Button Exit = dialog.findViewById(R.id.btnExitEdit);
+
+
         if (student != null) {
             ETidS.setText(String.valueOf(student.getStudentID()));
             ETfirstNSEdit.setText(student.getFirstName());
@@ -73,15 +79,8 @@ public class ElevenClassActivity extends AppCompatActivity {
             ETphoneS.setText(student.getPhone());
             ETemailSEdit.setText(student.getEmail());
             ETgrade.setText(student.getGrade());
-            ETclassTEdit.setSelection(student.getTeacherID());
+            fillSpinner(ETclassTEdit, student.getTeacherID());
         }
-
-        /*Exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });*/
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +136,8 @@ public class ElevenClassActivity extends AppCompatActivity {
                 stuPhone = ETphoneS.getText().toString();
                 stuEmail = ETemailSEdit.getText().toString();
                 stuClass = ETgrade.getText().toString();
-                stuClassT = String.valueOf(ETclassTEdit.getAdapter().getItemId(1));
+                String[] parts = ETclassTEdit.getSelectedItem().toString().split(" - ");
+                stuClassT = parts[1];
 
 
                 try {
@@ -176,9 +176,6 @@ public class ElevenClassActivity extends AppCompatActivity {
                 ETclassTEdit.setSelection(0);
             }
         });
-
-
-        fillSpinner(ETclassTEdit);
     }
 
     @Override
@@ -188,9 +185,8 @@ public class ElevenClassActivity extends AppCompatActivity {
         studentLine = findViewById(R.id.LVXI);
         ImageView imgExit = findViewById(R.id.imgExit);
 
-        // SetRecords();
-
         Button show = findViewById(R.id.btnShowXI);
+
 
         initDialog(student);
         imgExit.setOnClickListener(new View.OnClickListener() {
@@ -264,22 +260,11 @@ public class ElevenClassActivity extends AppCompatActivity {
                 initDialog(student);
                 dialog.show();
 
-
-
             }
         });
 
     }
-
-    /*private void SetRecords() {
-        ArrayList<Student> data;
-        data = new ArrayList<Student>(getStudentData.GetAllStudents());
-        studentAdapter = new StudentAdapter(this,data);
-        studentLine.setAdapter(studentAdapter);
-    }*/
-
-
-    private void fillSpinner(Spinner spin) {
+    private void fillSpinner(Spinner spin, int id) {
         try {
             con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
                     ConnectionClass.ip.toString());
@@ -288,12 +273,25 @@ public class ElevenClassActivity extends AppCompatActivity {
             ResultSet rs = stmt.executeQuery();
 
             ArrayList<String> data = new ArrayList<String>();
+
+            String selectionRow = "";
+
             while (rs.next()) {
-                String name = rs.getString("first_nameT");
-                data.add(name);
+                int teacherID = rs.getInt("TeacherID");
+                String firstName = rs.getString("first_nameT");
+                String entry = firstName + " - " + teacherID;
+                data.add(entry);
+
+                if(teacherID == id){
+                    selectionRow = entry;
+                }
             }
             ArrayAdapter array = new ArrayAdapter(ElevenClassActivity.this, android.R.layout.simple_list_item_1, data);
             spin.setAdapter(array);
+
+            int spinnerPos = array.getPosition(selectionRow);
+            spin.setSelection(spinnerPos);
+
         } catch (Exception ex) {
             ex.printStackTrace();
 
