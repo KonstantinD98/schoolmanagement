@@ -16,17 +16,15 @@
             android:layout_height="wrap_content"
             android:hint="ID of consultation" />
 
-        <EditText
-            android:id="@+id/ETstuNameCon"
+        <Spinner
+            android:id="@+id/stuSpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Student name" />
+            android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/ETteachNameCon"
+        <Spinner
+            android:id="@+id/teacherSpinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Teacher name"/>
+            android:layout_height="wrap_content" />
 
         <EditText
             android:id="@+id/ETtitle"

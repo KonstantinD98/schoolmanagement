@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.schoolmanagement.Adapters.ConsultationAdapter;
 import com.example.schoolmanagement.Adapters.StudentAdapter;
+import com.example.schoolmanagement.Classes.ElevenClassActivity;
 import com.example.schoolmanagement.Classes.NineClassActivity;
 import com.example.schoolmanagement.Classes.TenClassActivity;
 import com.example.schoolmanagement.ConnectionClass;
@@ -48,7 +50,6 @@ public class ConsultationsActivity extends AppCompatActivity {
      GetConsultationData getConsultationData = new GetConsultationData();
      ListView consultationLine;
 
-
     Statement st ;
 
     int result = 0;
@@ -56,7 +57,123 @@ public class ConsultationsActivity extends AppCompatActivity {
     ResultSet rs;
 
     String q = "";
+    Dialog dialog;
 
+    private void initDialog(Consultation consultation){
+        dialog = new Dialog(ConsultationsActivity.this);
+
+        dialog.setContentView(R.layout.dialog_consult);
+
+        EditText ETidConsultation = dialog.findViewById(R.id.ETidCons);
+        Spinner stuSpinner = dialog.findViewById(R.id.stuSpinner);
+        Spinner teacherSpinner = dialog.findViewById(R.id.teacherSpinner);
+        EditText ETtitle = dialog.findViewById(R.id.ETtitle);
+        EditText ETdescription = dialog.findViewById(R.id.ETdescription);
+        EditText ETdate = dialog.findViewById(R.id.ETdate);
+        Button buttonSaveConsult = dialog.findViewById(R.id.buttonSaveConsult);
+        if (consultation != null) {
+        ETidConsultation.setText(String.valueOf(consultation.getCosnultationID()));
+        ETtitle.setText(consultation.getSubject());
+        ETdescription.setText(consultation.getDescription());
+        ETdate.setText(consultation.getConsultationDate().toString());
+        }
+        fillSpinnerStu(stuSpinner, consultation != null ? consultation.getStudentIdCon() : 0);
+        fillSpinnerTeach(teacherSpinner, consultation != null ? consultation.getTeacherIdCon() : 0);
+        buttonSaveConsult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int cons_id;
+                String firstNameS, lastNameT, subject, description,consultation_date;
+                result = 0;
+                cons_id = Integer.parseInt(ETidConsultation.getText().toString());
+
+                String[] parts = stuSpinner.getSelectedItem().toString().split(" - ");
+                firstNameS = parts[1];
+
+                String[] part = teacherSpinner.getSelectedItem().toString().split(" - ");
+                lastNameT = part[1];
+                subject = ETtitle.getText().toString();
+                description = ETdescription.getText().toString();
+                consultation_date = ETdate.getText().toString();
+
+
+
+                try {
+                    con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                            ConnectionClass.ip.toString());
+                    if (con != null) {
+                        q = "update ConsultationTable set studentID='" + firstNameS + "', teacherID ='" +  lastNameT + "', subject='" + subject + "', description ='" +description + "', consultation_date='" + consultation_date + "' where consultationID=" + cons_id;
+                        st = con.createStatement();
+                        result = st.executeUpdate(q);
+                        if (result == 1) {
+                            Toast.makeText(ConsultationsActivity.this, "Record Updated", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(ConsultationsActivity.this, "Record NOT Updated", Toast.LENGTH_LONG).show();
+                        }
+                        cleanConsult();
+                        con.close();
+                        st.close();
+
+                    }
+
+                } catch (Exception e) {
+                    Log.e("Error : ", e.getMessage());
+                    Toast.makeText(ConsultationsActivity.this, "An error occurred: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            public void cleanConsult() {
+                ETidConsultation.setText("");
+                stuSpinner.setSelection(0);
+                teacherSpinner.setSelection(0);
+                ETtitle.setText("");
+                ETdescription.setText("");
+                ETdate.setText("");
+            }
+        });
+
+
+        Button buttonDeleteConsult = dialog.findViewById(R.id.buttonDeleteConsult);
+        buttonDeleteConsult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int cons_id;
+                result = 0;
+                cons_id = Integer.parseInt(ETidConsultation.getText().toString());
+                try {
+                    con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                            ConnectionClass.ip.toString());
+                    if (con != null) {
+                        q = "delete from ConsultationTable where consultationID=" + cons_id;
+                        st = con.createStatement();
+                        result = st.executeUpdate(q);
+                        if (result == 1) {
+                            Toast.makeText(ConsultationsActivity.this, "Record Deleted", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(ConsultationsActivity.this, "Record NOT Deleted", Toast.LENGTH_LONG).show();
+                        }
+                        cleanConsult();
+                        con.close();
+                    }
+                }
+
+                catch (Exception e){
+                    Log.e("Error : ", e.getMessage());
+                }
+            }
+            public void cleanConsult() {
+                ETidConsultation.setText("");
+                stuSpinner.setSelection(0);
+                teacherSpinner.setSelection(0);
+                ETtitle.setText("");
+                ETdescription.setText("");
+                ETdate.setText("");
+            }
+
+        });
+
+    }
 
      @Override
 
@@ -75,6 +192,7 @@ public class ConsultationsActivity extends AppCompatActivity {
          buttonViewConsult = findViewById(R.id.buttonViewConsult);
          fillSpinnerS();
          fillSpinnerT();
+         initDialog(consultation);
          buttonViewConsult.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
@@ -130,115 +248,9 @@ public class ConsultationsActivity extends AppCompatActivity {
                  LayoutInflater inflater = LayoutInflater.from(ConsultationsActivity.this);
                  View dialogView = inflater.inflate(R.layout.dialog_consult, null);
 
-                 // Set up the dialog builder
-                 AlertDialog.Builder builder = new AlertDialog.Builder(ConsultationsActivity.this);
-                 builder.setView(dialogView);
-                 EditText ETidConsultation = dialogView.findViewById(R.id.ETidCons);
-                 EditText ETstuNameCon = dialogView.findViewById(R.id.ETstuNameCon);
-                 EditText ETteachNameCon = dialogView.findViewById(R.id.ETteachNameCon);
-                 EditText ETtitle = dialogView.findViewById(R.id.ETtitle);
-                 EditText ETdescription = dialogView.findViewById(R.id.ETdescription);
-                 EditText ETdate = dialogView.findViewById(R.id.ETdate);
-                 Button buttonSaveConsult = dialogView.findViewById(R.id.buttonSaveConsult);
-
-                 ETidConsultation.setText(String.valueOf(consultation.getCosnultationID()));
-                 ETstuNameCon.setText(String.valueOf(consultation.getStudentIdCon()));
-                 ETteachNameCon.setText(String.valueOf(consultation.getTeacherIdCon()));
-                 ETtitle.setText(consultation.getSubject());
-                 ETdescription.setText(consultation.getDescription());
-                 ETdate.setText(consultation.getConsultationDate().toString());
-                 buttonSaveConsult.setOnClickListener(new View.OnClickListener() {
-                     @Override
-                     public void onClick(View v) {
-                         int cons_id;
-                         String firstNameS, lastNameT, subject, description,consultation_date;
-                         result = 0;
-                         cons_id = Integer.parseInt(ETidConsultation.getText().toString());
-                         firstNameS = ETstuNameCon.getText().toString();
-                         lastNameT = ETteachNameCon.getText().toString();
-                         subject = ETtitle.getText().toString();
-                         description = ETdescription.getText().toString();
-                         consultation_date = ETdate.getText().toString();
-
-
-
-                         try {
-                             con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
-                                     ConnectionClass.ip.toString());
-                             if (con != null) {
-                                 q = "update ConsultationTable set studentID='" + firstNameS + "', teacherID ='" +  lastNameT + "', subject='" + subject + "', description ='" +description + "', consultation_date='" + consultation_date + "' where consultationID=" + cons_id;
-                                 st = con.createStatement();
-                                 result = st.executeUpdate(q);
-                                 if (result == 1) {
-                                     Toast.makeText(ConsultationsActivity.this, "Record Updated", Toast.LENGTH_LONG).show();
-                                 } else {
-                                     Toast.makeText(ConsultationsActivity.this, "Record NOT Updated", Toast.LENGTH_LONG).show();
-                                 }
-                                 cleanConsult();
-                                 con.close();
-                                 st.close();
-
-                             }
-
-                         } catch (Exception e) {
-                             Log.e("Error : ", e.getMessage());
-                             Toast.makeText(ConsultationsActivity.this, "An error occurred: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                         }
-                     }
-
-                     public void cleanConsult() {
-                         ETidConsultation.setText("");
-                         ETstuNameCon.setText("");
-                         ETteachNameCon.setText("");
-                         ETtitle.setText("");
-                         ETdescription.setText("");
-                         ETdate.setText("");
-                     }
-                 });
-
-
-                Button buttonDeleteConsult = dialogView.findViewById(R.id.buttonDeleteConsult);
-                buttonDeleteConsult.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int cons_id;
-                        result = 0;
-                        cons_id = Integer.parseInt(ETidConsultation.getText().toString());
-                        try {
-                            con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
-                                    ConnectionClass.ip.toString());
-                            if (con != null) {
-                                q = "delete from ConsultationTable where consultationID=" + cons_id;
-                                st = con.createStatement();
-                                result = st.executeUpdate(q);
-                                if (result == 1) {
-                                    Toast.makeText(ConsultationsActivity.this, "Record Deleted", Toast.LENGTH_LONG).show();
-                                }
-                                else {
-                                    Toast.makeText(ConsultationsActivity.this, "Record NOT Deleted", Toast.LENGTH_LONG).show();
-                                }
-                                cleanConsult();
-                                con.close();
-                            }
-                        }
-
-                        catch (Exception e){
-                            Log.e("Error : ", e.getMessage());
-                        }
-                    }
-                    public void cleanConsult() {
-                        ETidConsultation.setText("");
-                        ETstuNameCon.setText("");
-                        ETteachNameCon.setText("");
-                        ETtitle.setText("");
-                        ETdescription.setText("");
-                        ETdate.setText("");
-                    }
-
-                });
 
                 // Show the dialog
-                AlertDialog dialog = builder.create();
+                initDialog(consultation);
                 dialog.show();
 
             }
@@ -367,6 +379,74 @@ public class ConsultationsActivity extends AppCompatActivity {
 
         return -1;
     }
+
+    private void fillSpinnerTeach(Spinner spin, int id) {
+        try {
+            con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                    ConnectionClass.ip.toString());
+            String query = "SELECT * FROM TeacherTable";
+            PreparedStatement stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            ArrayList<String> data = new ArrayList<String>();
+
+            String selectionRow = "";
+
+            while (rs.next()) {
+                int teacherID = rs.getInt("TeacherID");
+                String firstName = rs.getString("first_nameT");
+                String entry = firstName + " - " + teacherID;
+                data.add(entry);
+
+                if(teacherID == id){
+                    selectionRow = entry;
+                }
+            }
+            ArrayAdapter array = new ArrayAdapter(ConsultationsActivity.this, android.R.layout.simple_list_item_1, data);
+            spin.setAdapter(array);
+
+            int spinnerPos = array.getPosition(selectionRow);
+            spin.setSelection(spinnerPos);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
+    }
+    private void fillSpinnerStu(Spinner spin, int id) {
+        try {
+            con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                    ConnectionClass.ip.toString());
+            String query = "SELECT * FROM StudentTable";
+            PreparedStatement stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            ArrayList<String> data = new ArrayList<String>();
+
+            String selectionRow = "";
+
+            while (rs.next()) {
+                int teacherID = rs.getInt("studentID");
+                String firstName = rs.getString("first_name");
+                String entry = firstName + " - " + teacherID;
+                data.add(entry);
+
+                if(teacherID == id){
+                    selectionRow = entry;
+                }
+            }
+            ArrayAdapter array = new ArrayAdapter(ConsultationsActivity.this, android.R.layout.simple_list_item_1, data);
+            spin.setAdapter(array);
+
+            int spinnerPos = array.getPosition(selectionRow);
+            spin.setSelection(spinnerPos);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
+    }
+
 
     @SuppressLint("NewApi")
     public Connection connectionClass(String user, String password, String database, String server) {
