@@ -74,7 +74,8 @@ public class StudentsActivity extends AppCompatActivity {
                 try {con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
                         ConnectionClass.ip.toString());
                     if (con != null ){
-                        q = "insert into StudentTable(first_name, last_name, gender, phone, email, class, teacherID) values('"+firstNameS+"','"+lastNameS+"','"+genderS+"','"+phoneS+"','"
+                        q = "insert into StudentTable(first_name, last_name, gender, phone, email, class, teacherID) values('"+firstNameS+"','"
+                                +lastNameS+"','"+genderS+"','"+phoneS+"','"
                                 +emailS+"','"+grade+"','"+teacherID+"')";
                         stmt = con.createStatement();
                         result = stmt.executeUpdate(q);

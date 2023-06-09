@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="High School PGSS"
+        android:text="School management MENU"
         android:textColor="@color/purple_200"
         android:textSize="30sp"
         android:textStyle="bold"

@@ -33,7 +33,7 @@
             android:id="@+id/editTextTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title"/>
+            android:hint="Subject"/>
 
         <EditText
             android:id="@+id/editTextDescription"

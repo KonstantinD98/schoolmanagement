@@ -29,10 +29,10 @@
     <TextView
         android:id="@+id/TVHS"
         style="@style/Theme.AppCompat.DayNight.Dialog"
-        android:layout_width="408dp"
-        android:layout_height="64dp"
+        android:layout_width="403dp"
+        android:layout_height="92dp"
         android:gravity="center"
-        android:text="High school Hristo Botev "
+        android:text="School management system"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -141,7 +141,8 @@ public class ConsultationsActivity extends AppCompatActivity {
                 result = 0;
                 cons_id = Integer.parseInt(ETidConsultation.getText().toString());
                 try {
-                    con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                    con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(),
+                            ConnectionClass.db.toString(),
                             ConnectionClass.ip.toString());
                     if (con != null) {
                         q = "delete from ConsultationTable where consultationID=" + cons_id;

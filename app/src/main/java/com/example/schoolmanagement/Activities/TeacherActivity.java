@@ -64,7 +64,8 @@ public class TeacherActivity extends AppCompatActivity {
                 try {con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
                         ConnectionClass.ip.toString());
                     if (con != null ){
-                        q = "insert into TeacherTable(first_nameT, last_nameT, gender, phone, email, speciality) values('"+firstNameT+"','"+lastNameT+"','"+genderT+"','"+phoneT+"','"
+                        q = "insert into TeacherTable(first_nameT, last_nameT, gender, phone, email, speciality) values('"+firstNameT+"','"
+                                +lastNameT+"','"+genderT+"','"+phoneT+"','"
                                 +emailT+"','"+speciality+"')";
                         stmt = con.createStatement();
                         result = stmt.executeUpdate(q);

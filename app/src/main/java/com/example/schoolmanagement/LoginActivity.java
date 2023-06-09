@@ -20,8 +20,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class LoginActivity extends AppCompatActivity {
-
-
         EditText ETLoginUsername, ETLoginPassword;
         Button btnLogin;
         TextView TVRegister;
@@ -64,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
             protected void onPreExecute() {
 
             }
-
 
             @Override
             protected void onPostExecute(String s) {

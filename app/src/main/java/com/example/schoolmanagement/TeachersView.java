@@ -136,7 +136,8 @@ public class TeachersView extends AppCompatActivity {
                     con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
                             ConnectionClass.ip.toString());
                     if (con != null) {
-                        q = "update TeacherTable set first_nameT='" + f_TName + "', last_nameT ='" + l_TName + "', gender='" + tGender + "', phone ='" + tPhone + "', email='" + tEmail + "', speciality='" + selectedSpinnerValue + "' where teacherID=" + t_id;
+                        q = "update TeacherTable set first_nameT='" + f_TName + "', last_nameT ='" + l_TName + "', gender='" + tGender
+                                + "', phone ='" + tPhone + "', email='" + tEmail + "', speciality='" + selectedSpinnerValue + "' where teacherID=" + t_id;
                         st = con.createStatement();
                         result = st.executeUpdate(q);
                         if (result == 1) {
@@ -234,12 +235,10 @@ public class TeachersView extends AppCompatActivity {
                                 teacherList.add(teacher);
                             }
 
-                            // Close the connection and the query result
                             rs.close();
                             stmt.close();
                             con.close();
 
-                            // Update the ListView on the main thread
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

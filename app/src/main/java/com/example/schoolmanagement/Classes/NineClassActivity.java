@@ -96,12 +96,9 @@ public class NineClassActivity extends AppCompatActivity {
                         con.close();
 
                     }
-
-
                 } catch (Exception e) {
                     Log.e("Error : ", e.getMessage());
                 }
-
             }
 
             public void cleanStu() {
@@ -215,16 +212,11 @@ public class NineClassActivity extends AppCompatActivity {
                                 student.setGrade(rs.getString("class"));
                                 student.setTeacherID(rs.getInt("teacherID"));
 
-
                                 studentList.add(student);
                             }
-
-                            // Close the connection and the query result
                             rs.close();
                             stmt.close();
                             con.close();
-
-                            // Update the ListView on the main thread
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -260,13 +252,6 @@ public class NineClassActivity extends AppCompatActivity {
         });
 
     }
-
-    /*private void SetRecords() {
-        ArrayList<Student> data;
-        data = new ArrayList<Student>(getStudentData.GetAllStudents());
-        studentAdapter = new StudentAdapter(this,data);
-        studentLine.setAdapter(studentAdapter);
-    }*/
 
 
     private void fillSpinner(Spinner spin, int id) {
