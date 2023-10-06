@@ -105,6 +105,7 @@ public class TeachersView extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.e("Error : ", e.getMessage());
                 }
+                showTeachers();
 
             }
 
@@ -153,6 +154,7 @@ public class TeachersView extends AppCompatActivity {
                     Log.e("Error : ", e.getMessage());
                     Toast.makeText(TeachersView.this, "An error occurred: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
+                showTeachers();
             }
 
             public void cleanStu() {
@@ -194,11 +196,6 @@ public class TeachersView extends AppCompatActivity {
         teacherLine = findViewById(R.id.lvTeacher);
         ImageView imgExit = findViewById(R.id.imgExit);
 
-        // SetRecords();
-
-        Button show = findViewById(R.id.btnShow);
-
-        //initDialog(student);
         imgExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,53 +203,7 @@ public class TeachersView extends AppCompatActivity {
             }
         });
 
-        show.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
-                                    ConnectionClass.ip.toString());
-                            String query = "SELECT * FROM TeacherTable";
-                            PreparedStatement stmt = con.prepareStatement(query);
-                            ResultSet rs = stmt.executeQuery();
-
-                            List<Teacher> teacherList = new ArrayList<>();
-                            while (rs.next()) {
-                                Teacher teacher = new Teacher();
-
-                                teacher.setTeacherID(rs.getInt("teacherID"));
-                                teacher.setTeacherFirstName(rs.getString("first_nameT"));
-                                teacher.setTeacherLastName(rs.getString("last_nameT"));
-                                teacher.setTeacherGender(rs.getString("gender"));
-                                teacher.setTeacherPhone(rs.getString("phone"));
-                                teacher.setTeacherEmail(rs.getString("email"));
-                                teacher.setTeacherSpeciality(rs.getString("speciality"));
-
-
-                                teacherList.add(teacher);
-                            }
-
-                            rs.close();
-                            stmt.close();
-                            con.close();
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    teacherAdapter = new TeacherAdapter((Context) TeachersView.this, (ArrayList<Teacher>) teacherList);
-                                    teacherLine.setAdapter(teacherAdapter);
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-            }
-        });
+        showTeachers();
 
         teacherLine.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -272,6 +223,50 @@ public class TeachersView extends AppCompatActivity {
             }
         });
 
+    }
+    private void showTeachers() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                            ConnectionClass.ip.toString());
+                    String query = "SELECT * FROM TeacherTable";
+                    PreparedStatement stmt = con.prepareStatement(query);
+                    ResultSet rs = stmt.executeQuery();
+
+                    List<Teacher> teacherList = new ArrayList<>();
+                    while (rs.next()) {
+                        Teacher teacher = new Teacher();
+
+                        teacher.setTeacherID(rs.getInt("teacherID"));
+                        teacher.setTeacherFirstName(rs.getString("first_nameT"));
+                        teacher.setTeacherLastName(rs.getString("last_nameT"));
+                        teacher.setTeacherGender(rs.getString("gender"));
+                        teacher.setTeacherPhone(rs.getString("phone"));
+                        teacher.setTeacherEmail(rs.getString("email"));
+                        teacher.setTeacherSpeciality(rs.getString("speciality"));
+
+                        teacherList.add(teacher);
+                    }
+
+                    rs.close();
+                    stmt.close();
+                    con.close();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            teacherAdapter = new TeacherAdapter((Context) TeachersView.this, (ArrayList<Teacher>) teacherList);
+                            teacherLine.setAdapter(teacherAdapter);
+                            teacherAdapter.notifyDataSetChanged();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
     @SuppressLint("NewApi")
     public Connection connectionClass (String user, String password, String database, String server){

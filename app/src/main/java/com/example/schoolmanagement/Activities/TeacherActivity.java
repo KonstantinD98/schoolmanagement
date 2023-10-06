@@ -47,8 +47,6 @@ public class TeacherActivity extends AppCompatActivity {
         btnAddT = findViewById(R.id.btnAddT);
         btnBackT = findViewById(R.id.btnBackT);
         btnBackT.setOnClickListener(onClick);
-        btnView= findViewById(R.id.btnView);
-        btnView.setOnClickListener(onClick);
         fillSpinner();
         btnAddT.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +69,8 @@ public class TeacherActivity extends AppCompatActivity {
                         result = stmt.executeUpdate(q);
                         if (result == 1){
                             Toast.makeText(TeacherActivity.this, "Record Inserted", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(TeacherActivity.this, TeachersView.class);
+                            startActivity(intent);
                         }else {
                             Toast.makeText(TeacherActivity.this, "Record NOT Inserted", Toast.LENGTH_LONG).show();
 
@@ -109,9 +109,6 @@ public class TeacherActivity extends AppCompatActivity {
             switch (view.getId()) {
                 case R.id.btnBackT:
                     intent = new Intent(TeacherActivity.this, MainActivity.class);
-                    break;
-                case R.id.btnView:
-                    intent = new Intent(TeacherActivity.this, TeachersView.class);
                     break;
             }
 

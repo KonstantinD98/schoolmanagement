@@ -3,12 +3,16 @@ package com.example.schoolmanagement.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+
 import android.app.Dialog;
+
 import android.content.Context;
+import android.content.Intent;
+
 import android.os.Bundle;
+
 import android.os.StrictMode;
-import android.text.TextUtils;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,16 +25,14 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.schoolmanagement.Adapters.ConsultationAdapter;
-import com.example.schoolmanagement.Adapters.StudentAdapter;
-import com.example.schoolmanagement.Classes.ElevenClassActivity;
-import com.example.schoolmanagement.Classes.NineClassActivity;
-import com.example.schoolmanagement.Classes.TenClassActivity;
+
 import com.example.schoolmanagement.ConnectionClass;
 import com.example.schoolmanagement.Data.GetConsultationData;
-import com.example.schoolmanagement.Data.GetStudentData;
+
 import com.example.schoolmanagement.Entity.Consultation;
-import com.example.schoolmanagement.Entity.Student;
+
 import com.example.schoolmanagement.R;
+import com.example.schoolmanagement.ServiceNotification.ConsultationService;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -40,7 +42,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConsultationsActivity extends AppCompatActivity {
+    public class ConsultationsActivity extends AppCompatActivity {
      EditText editTextTitle, editTextDescription, editTextDate;
      Spinner spinnerT, spinnerS;
      Button buttonAddConsult, buttonViewConsult;
@@ -49,6 +51,7 @@ public class ConsultationsActivity extends AppCompatActivity {
      ConsultationAdapter consultationAdapter;
      GetConsultationData getConsultationData = new GetConsultationData();
      ListView consultationLine;
+     ConsultationService service;
 
     Statement st ;
 
@@ -174,6 +177,7 @@ public class ConsultationsActivity extends AppCompatActivity {
 
         });
 
+
     }
 
      @Override
@@ -193,7 +197,11 @@ public class ConsultationsActivity extends AppCompatActivity {
          buttonViewConsult = findViewById(R.id.buttonViewConsult);
          fillSpinnerS();
          fillSpinnerT();
+         Intent serviceIntent = new Intent(this, ConsultationService.class);
+         startService(serviceIntent);
          initDialog(consultation);
+
+
          buttonViewConsult.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
@@ -240,6 +248,8 @@ public class ConsultationsActivity extends AppCompatActivity {
                  }).start();
              }
          });
+
+
          consultationLine.setOnItemClickListener(new AdapterView.OnItemClickListener() {
              @Override
              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -250,57 +260,56 @@ public class ConsultationsActivity extends AppCompatActivity {
                  View dialogView = inflater.inflate(R.layout.dialog_consult, null);
 
 
-                // Show the dialog
-                initDialog(consultation);
-                dialog.show();
+                 // Show the dialog
+                 initDialog(consultation);
+                 dialog.show();
 
-            }
+             }
 
-        });
+         });
 
-        buttonAddConsult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String selectedStudentName = spinnerS.getSelectedItem().toString();
-                int studentID = getStudentIDFromName(selectedStudentName);
+         buttonAddConsult.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 String selectedStudentName = spinnerS.getSelectedItem().toString();
+                 int studentID = getStudentIDFromName(selectedStudentName);
 
-                String selectedTeacherName = spinnerT.getSelectedItem().toString();
-                int teacherID = getTeacherIDFromName(selectedTeacherName);
+                 String selectedTeacherName = spinnerT.getSelectedItem().toString();
+                 int teacherID = getTeacherIDFromName(selectedTeacherName);
 
-                String consultationTitle = editTextTitle.getText().toString().trim();
-                String consultationDetails = editTextDescription.getText().toString().trim();
-                String consultationDate = editTextDate.getText().toString().trim();
+                 String consultationTitle = editTextTitle.getText().toString().trim();
+                 String consultationDetails = editTextDescription.getText().toString().trim();
+                 String consultationDate = editTextDate.getText().toString().trim();
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
-                                    ConnectionClass.ip.toString());
+                 new Thread(new Runnable() {
+                     @Override
+                     public void run() {
+                         try {
+                             con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
+                                     ConnectionClass.ip.toString());
 
-                            String query = "INSERT INTO ConsultationTable (studentID, teacherID, subject, description, consultation_date) " +
-                                    "VALUES ('" + studentID  + "', '" + teacherID + "', '" + consultationTitle + "', '" + consultationDetails + "', '" + consultationDate + "')";
-                            PreparedStatement stmt = con.prepareStatement(query);
-                            stmt.executeUpdate();
+                             String query = "INSERT INTO ConsultationTable (studentID, teacherID, subject, description, consultation_date) " +
+                                     "VALUES ('" + studentID + "', '" + teacherID + "', '" + consultationTitle + "', '" + consultationDetails + "', '" + consultationDate + "')";
+                             PreparedStatement stmt = con.prepareStatement(query);
+                             stmt.executeUpdate();
 
-                            stmt.close();
-                            con.close();
+                             stmt.close();
+                             con.close();
 
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), "Consultation added successfully", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-            }
-        });
-        }
-
+                             runOnUiThread(new Runnable() {
+                                 @Override
+                                 public void run() {
+                                     Toast.makeText(getApplicationContext(), "Consultation added successfully", Toast.LENGTH_SHORT).show();
+                                 }
+                             });
+                         } catch (Exception e) {
+                             e.printStackTrace();
+                         }
+                     }
+                 }).start();
+             }
+         });
+     }
     private void fillSpinnerT() {
         try {
             con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
@@ -321,6 +330,7 @@ public class ConsultationsActivity extends AppCompatActivity {
 
         }
     }
+
 
 
     private void fillSpinnerS() {
@@ -362,6 +372,7 @@ public class ConsultationsActivity extends AppCompatActivity {
 
         return -1;
     }
+
     private int getTeacherIDFromName(String teacherName) {
         try {
             con = connectionClass(ConnectionClass.un.toString(),ConnectionClass.pass.toString(),ConnectionClass.db.toString(),
@@ -414,6 +425,7 @@ public class ConsultationsActivity extends AppCompatActivity {
 
         }
     }
+
     private void fillSpinnerStu(Spinner spin, int id) {
         try {
             con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(),
@@ -446,7 +458,9 @@ public class ConsultationsActivity extends AppCompatActivity {
             ex.printStackTrace();
 
         }
+
     }
+
 
 
     @SuppressLint("NewApi")

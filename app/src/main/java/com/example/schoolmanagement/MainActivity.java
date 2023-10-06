@@ -15,6 +15,7 @@ import com.example.schoolmanagement.Activities.ClassesActivity;
 import com.example.schoolmanagement.Activities.ConsultationsActivity;
 import com.example.schoolmanagement.Activities.StudentsActivity;
 import com.example.schoolmanagement.Activities.TeacherActivity;
+import com.example.schoolmanagement.ServiceNotification.ConsultationService;
 
 public class MainActivity extends AppCompatActivity {
 

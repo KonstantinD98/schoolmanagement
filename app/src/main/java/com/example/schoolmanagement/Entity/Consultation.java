@@ -1,6 +1,8 @@
 package com.example.schoolmanagement.Entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Consultation {
     int cosnultationID;
@@ -67,5 +69,9 @@ public class Consultation {
 
     public void setConsultationDate(Date consultationDate) {
         this.consultationDate = consultationDate;
+    }
+    public String getFormattedDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+        return dateFormat.format(consultationDate);
     }
 }

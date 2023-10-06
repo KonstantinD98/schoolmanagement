@@ -17,7 +17,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GetConsultationData {
+
     Connection con;
+    public Consultation GetConsultation(){
+        Consultation consultation = new Consultation();
+
+        try {
+            con = connectionClass(ConnectionClass.un.toString(), ConnectionClass.pass.toString(), ConnectionClass.db.toString(), ConnectionClass.ip.toString());
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM ConsultationTable");
+            if (rs.next()) {
+                consultation = new Consultation();
+
+                consultation.setStudentIdCon(rs.getInt("studentID"));
+                consultation.setTeacherIdCon(rs.getInt("teacherID"));
+                consultation.setSubject(rs.getString("subject"));
+                consultation.setDescription(rs.getString("description"));
+                consultation.setConsultationDate(rs.getDate("consultation_date"));
+            }
+
+            rs.close();
+            stmt.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return consultation;
+    }
 
     public List<Consultation> GetAllConsultations() {
         List<Consultation> consultationList = new ArrayList<>();
@@ -27,7 +54,6 @@ public class GetConsultationData {
                     ConnectionClass.ip.toString());
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("Select * from ConsultationTable");
-            rs.next();
             while (rs.next()) {
                 Consultation consultation = new Consultation();
 
@@ -35,7 +61,7 @@ public class GetConsultationData {
                 consultation.setTeacherIdCon(rs.getInt("teacherID"));
                 consultation.setSubject(rs.getString("subject"));
                 consultation.setDescription(rs.getString("description"));
-                consultation.setConsultationDate(rs.getDate("date"));
+                consultation.setConsultationDate(rs.getDate("consultation_date"));
 
 
                 consultationList.add(consultation);
